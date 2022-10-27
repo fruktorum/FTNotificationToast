@@ -10,6 +10,7 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 public class ToastView: UIView {
+    
     public enum TextAlignment {
         case left
         case center
@@ -28,6 +29,7 @@ public class ToastView: UIView {
     }
 
     private let position: Position
+    
     private var initialTransform: CGAffineTransform {
         switch position {
         case .top:
@@ -36,6 +38,7 @@ public class ToastView: UIView {
             return CGAffineTransform(translationX: 0, y: 100)
         }
     }
+    
     private let hStack: UIStackView = {
         let stackView = UIStackView()
         stackView.alignment = .center
@@ -57,6 +60,17 @@ public class ToastView: UIView {
         } else {
             label.textColor = .black
         }
+        return label
+    }()
+    
+    private let subtitleLabel: UILabel = {
+        let label = UILabel()
+        if #available(iOS 13.0, *) {
+            label.textColor = .secondaryLabel
+        } else {
+            label.textColor = .lightGray
+        }
+        label.numberOfLines = 0
         return label
     }()
 
@@ -109,6 +123,13 @@ public class ToastView: UIView {
             titleLabel.textColor = titleTextColor
         }
     }
+    
+    /// Subtitle text color
+    public var subtitleTextColor: UIColor = .lightGray {
+        didSet {
+            subtitleLabel.textColor = titleTextColor
+        }
+    }
 
     /// Background color in dark mode
     public var darkBackgroundColor = UIColor(red: 0.13, green: 0.13, blue: 0.13, alpha: 1.00) {
@@ -130,13 +151,10 @@ public class ToastView: UIView {
                 subtitle: String? = nil, subtitleFont: UIFont = .systemFont(ofSize: 11, weight: .light),
                 icon: UIImage? = nil, iconSpacing: CGFloat = 16, position: Position = .top, onTap: (() -> ())? = nil) {
         self.position = position
-
         super.init(frame: .zero)
 
         backgroundColor = viewBackgroundColor
-
         hStack.spacing = iconSpacing
-
         titleLabel.font = titleFont
         titleLabel.text = title
         vStack.addArrangedSubview(titleLabel)
@@ -145,10 +163,12 @@ public class ToastView: UIView {
             let iconImageView = UIImageView()
             iconImageView.contentMode = .scaleAspectFit
             iconImageView.translatesAutoresizingMaskIntoConstraints = false
+            
             NSLayoutConstraint.activate([
                 iconImageView.widthAnchor.constraint(equalToConstant: 28),
                 iconImageView.heightAnchor.constraint(equalToConstant: 28)
             ])
+            
             if #available(iOS 13.0, *) {
                 iconImageView.tintColor = .label
             } else {
@@ -159,13 +179,6 @@ public class ToastView: UIView {
         }
 
         if let subtitle = subtitle {
-            let subtitleLabel = UILabel()
-            if #available(iOS 13.0, *) {
-                subtitleLabel.textColor = .secondaryLabel
-            } else {
-                subtitleLabel.textColor = .lightGray
-            }
-            subtitleLabel.numberOfLines = 0
             subtitleLabel.font = subtitleFont
             subtitleLabel.text = subtitle
             vStack.addArrangedSubview(subtitleLabel)
