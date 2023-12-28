@@ -4,19 +4,13 @@
 import PackageDescription
 
 let package = Package(
-    name: "NotificationToast",
-    platforms: [
-                .iOS(.v9),
-            ],
+    name: "FTNotificationToast",
+    platforms: [.iOS(.v9)],
     products: [
-        .library(
-            name: "NotificationToast",
-            targets: ["NotificationToast"]),
+        .library(name: "FTNotificationToast", targets: ["FTNotificationToast"]),
     ],
     dependencies: [],
     targets: [
-        .target(
-            name: "NotificationToast",
-            dependencies: [])
+        .target(name: "FTNotificationToast", dependencies: [], path: "./Sources/FTNotificationToast")
     ]
 )
